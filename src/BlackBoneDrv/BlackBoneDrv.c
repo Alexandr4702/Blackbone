@@ -482,6 +482,28 @@ NTSTATUS BBInitDynamicData( IN OUT PDYNAMIC_DATA pData )
                         pData->ExRemoveTable -= 0x34;
                     break;
                 }
+                else if (verInfo.dwBuildNumber == 19045)
+                {
+                    pData->ver = WINVER_10_20H2;
+                    // KP
+                    pData->KExecOpt = 0x283; //filled
+                    // EP
+                    pData->Protection = 0x87A; // filled 
+                    pData->EProcessFlags2 = 0x9D4;    // MitigationFlags offset filled
+                    pData->ObjTable = 0x570; //filled
+                    pData->VadRoot = 0x7D8;  //filled
+                    // KT
+                    pData->PrevMode = 0x232; //filled
+                    // ET
+                    pData->ExitStatus = 0x548; // filled
+                    // SSDT
+                    pData->NtCreateThdExIndex = 0xC1; //unknown
+                    pData->NtTermThdIndex = 0x53; // unknown
+                    pData->MiAllocPage = 0; //unknown
+                    if (NT_SUCCESS(BBScanSection("PAGE", (PCUCHAR)"\x48\x83\xC7\x18\x48\x8B\x17", 0xCC, 7, (PVOID)&pData->ExRemoveTable)))
+                        pData->ExRemoveTable -= 0x34;
+                    break;
+                    }
                 else
                 {
                     return STATUS_NOT_SUPPORTED;
